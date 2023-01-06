@@ -58,3 +58,87 @@ def patient_normalise(data):
     normalised[np.isnan(normalised)] = 0
     normalised[normalised < 0] = 0
     return normalised
+
+def attach_names(data, names):
+    """Attach patient names to patient data"""
+    assert len(data) == len(names)
+    patient_info = []
+
+    for data_row, name in zip(data, names):
+        patient_info.append({'name': name,
+                             'data': data_row})
+
+    return patient_info
+
+class Person:
+    def __init__(self, name):
+        self.name = name
+
+    def __str__(self):
+        return self.name
+
+class Patient(Person):
+    def __init__(self, name):
+        super().__init__(name)
+        self.observations = []
+
+    def add_observation(self, value, day=None):
+
+        if day is None:
+
+            try:
+                day = self.observations[-1]['day'] + 1
+
+            except IndexError:
+                daya = 0
+
+        new_observation = {
+            'day': day,
+            'value': value,
+        }
+
+        self.observations.append(new_observation)
+        return new_observation
+
+    @property
+    def last_observation(self, ):
+        return self.observations[-1]
+
+    def __str__(self):
+        return self.name
+
+class Observation:
+
+    def __init__(self, day, value):
+        self.day = day
+        self.value = value
+
+    def __str__(self):
+        return str(self.value)
+
+class Doctor(Person):
+
+    def __init__(self, name):
+        super().__init__(name)
+        self.patient_list = []
+
+    def add_patient(self, new_patient):
+
+        self.patient_list.append(new_patient)
+        return new_patient
+
+
+alice = Patient('Alice')
+print(alice)
+
+observation = alice.add_observation(3)
+print(observation)
+print(alice.observations)
+
+obs = alice.last_observation
+print(obs)
+
+judy = Doctor('Judy')
+judy.add_patient("Alice")
+print(judy)
+print(judy.patient_list)

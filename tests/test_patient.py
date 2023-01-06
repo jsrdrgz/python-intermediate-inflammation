@@ -8,3 +8,5 @@ def test_create_patient():
     p = Patient(name=name)
 
     assert p.name == name
+
+def test_
